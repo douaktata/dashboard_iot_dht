@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tableau de bord IoT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" stroke="#0a0f1c" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="#0a0f1c"/></svg>
+        </div>
+        <div>
+          <h1>Tableau de bord IoT</h1>
+          <p>Deux LED &amp; capteur DHT22 &middot; Firebase Realtime Database</p>
+        </div>
+      </div>
+
+      <div class="statusbar">
+        <div class="status-item">
+          <span class="dot" id="connDot"></span>
+          <span id="connText">Connexion...</span>
+        </div>
+        <div class="status-item">
+          <span class="clock" id="clockText">--:--:--</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-head">
+          <div class="label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.5.4.8 1 .8 1.6V16h5.6v-.6c0-.6.3-1.2.8-1.6A6 6 0 0 0 12 3Z"/></svg>
+            Commande des LED
+          </div>
+          <span class="updated" id="ledUpdated">--:--:--</span>
+        </div>
+
+        <div class="led-visual">
+          <div class="bulb-wrap">
+            <div class="bulb-glow" id="bulbGlow"></div>
+            <svg viewBox="0 0 78 78" fill="none">
+              <circle cx="39" cy="34" r="22" id="bulbFill" fill="#334155"/>
+              <path d="M32 55h14M34 61h10" stroke="#0a0f1c" stroke-width="4" stroke-linecap="round"/>
+              <path d="M39 20v10M31 27l6 6M47 27l-6 6" stroke="#0a0f1c" stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
+            </svg>
+          </div>
+          <div class="led-state" id="etatLed">Chargement...</div>
+          <div class="led-sub">LED 1 &middot; GPIO 22 &middot; <code class="path-code">/led_1</code></div>
+
+          <label class="switch">
+            <input type="checkbox" id="ledToggle" aria-label="Allumer ou éteindre la LED 1">
+            <span class="slider"></span>
+          </label>
+
+          <div class="led-visual led-secondary">
+            <div class="bulb-wrap">
+              <div class="bulb-glow" id="bulbGlow2"></div>
+              <svg viewBox="0 0 78 78" fill="none">
+                <circle cx="39" cy="34" r="22" id="bulbFill2" fill="#334155"/>
+                <path d="M32 55h14M34 61h10" stroke="#0a0f1c" stroke-width="4" stroke-linecap="round"/>
+                <path d="M39 20v10M31 27l6 6M47 27l-6 6" stroke="#0a0f1c" stroke-width="2.4" stroke-linecap="round" opacity="0.55"/>
+              </svg>
+            </div>
+            <div class="led-state" id="etatLed2">Chargement...</div>
+            <div class="led-sub">LED 2 &middot; GPIO 23 &middot; <code class="path-code">/led_2</code></div>
+            <label class="switch">
+              <input type="checkbox" id="ledToggle2" aria-label="Allumer ou éteindre la LED 2">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0Z"/></svg>
+            Température
+          </div>
+          <span class="updated" id="tempUpdated">--:--:--</span>
+        </div>
+        <div class="gauge-wrap">
+          <canvas id="tempGauge" width="220" height="130"></canvas>
+          <div class="gauge-readout">
+            <div class="num" id="tempVal">--<span>&deg;C</span></div>
+            <div class="tag">Capteur DHT22 &middot; plage 0&ndash;50&deg;C</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.5s7 8.2 7 13a7 7 0 1 1-14 0c0-4.8 7-13 7-13Z"/></svg>
+            Humidité
+          </div>
+          <span class="updated" id="humUpdated">--:--:--</span>
+        </div>
+        <div class="gauge-wrap">
+          <canvas id="humGauge" width="220" height="130"></canvas>
+          <div class="gauge-readout">
+            <div class="num" id="humVal">--<span>%</span></div>
+            <div class="tag">Capteur DHT22 &middot; plage 0&ndash;100%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Données synchronisées en direct via <code>Firebase Realtime Database</code>
+    </footer>
+  </div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
